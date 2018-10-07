@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Calendar;
 
 
 @Entity
@@ -37,9 +36,6 @@ public class UserProfile {
     @Column(name = "email_id")
     private String emailId;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "dob")
-    private Calendar dateOfBirth;
 
     @Column(name = "is_email_approved")
     private boolean isEmailApproved;
@@ -76,9 +72,6 @@ public class UserProfile {
         return emailId;
     }
 
-    public Calendar getDateOfBirth() {
-        return dateOfBirth;
-    }
 
     public boolean isEmailApproved() {
         return isEmailApproved;
@@ -116,9 +109,6 @@ public class UserProfile {
         this.emailId = emailId;
     }
 
-    public void setDateOfBirth(Calendar dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
 
     public void setEmailApproved(boolean emailApproved) {
         isEmailApproved = emailApproved;
@@ -128,25 +118,20 @@ public class UserProfile {
         this.user = user;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public UserProfile() {
 
     }
 
     public UserProfile(String firstName, String middleName,
                        String lastName, String phone,
-                       String emailId, Calendar dateOfBirth,
-                       String address , boolean isEmailApproved) {
+                       String emailId, String address ,
+                       boolean isEmailApproved) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.phone = phone;
         this.emailId = emailId;
         this.isEmailApproved = isEmailApproved;
-        this.dateOfBirth = dateOfBirth;
         this.address = address;
 
     }

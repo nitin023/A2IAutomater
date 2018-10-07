@@ -1,40 +1,49 @@
 package com.twitter.demo.controller;
 
+import com.twitter.demo.Resources.Email.Constant.EmailTemplate;
+import com.twitter.demo.Services.EmailService;
 import com.twitter.demo.Services.UserService;
+import com.twitter.demo.modal.Email;
 import com.twitter.demo.modal.User;
+import com.twitter.demo.modal.UserContext;
 import com.twitter.demo.modal.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Calendar;
-import java.util.Date;
 
 @org.springframework.web.bind.annotation.RestController
-public class RestController {
+public class RestController extends Thread {
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailService emailService;
 
-    @GetMapping("/save-user")
-    public String saveUser(@RequestParam String firstName, @RequestParam String middleName,
-                           @RequestParam String lastName, @RequestParam String userName,
-                           @RequestParam String emailId, @RequestParam String password,
-                           @RequestParam String mobile, @RequestParam Date dateOfBirth,
-                           @RequestParam String address) {
 
-        Calendar dob = Calendar.getInstance();
-        dob.set(dateOfBirth.getYear(), dateOfBirth.getMonth(), dateOfBirth.getDay());
+    @PostMapping("/addUser")
+    public String saveUserInfo(@RequestBody UserContext userContext) {
+        User user = userContext.getUser();
+        UserProfile userProfile = userContext.getUserProfile();
+        user.setUserProfile(userProfile);
+        userProfile.setUser(user);
 
-        UserProfile profile = new UserProfile
-                (firstName, middleName, lastName,
-                        mobile, emailId, dob,
-                        address, false);
-        User user = new User(userName, password);
-        user.setUserProfile(profile);
-        profile.setUser(user);
         userService.saveUser(user);
-        return "user saved";
+        StringBuilder sb = new StringBuilder();
+        sb.append("A mail is send to ")
+                .append(userProfile.getFirstName())
+                .append("\t")
+                .append(userProfile.getLastName())
+                .append("\t").
+                append("for verification");
+
+        new Thread(() -> {
+            Email email = new Email("Twitter account verification",
+                    userProfile.getEmailId(),
+                    EmailTemplate.APP_VERIFY);
+            emailService.setSendMail(email);
+        }).start();
+
+        return sb.toString();
     }
 }

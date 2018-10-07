@@ -5,7 +5,6 @@ import com.twitter.demo.repository.UserProfileRepository;
 import com.twitter.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 
 @Service
