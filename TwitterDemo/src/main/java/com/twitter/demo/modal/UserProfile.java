@@ -118,6 +118,14 @@ public class UserProfile {
         this.user = user;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public UserProfile() {
 
     }

@@ -1,5 +1,6 @@
 package com.twitter.demo.controller;
 
+import com.twitter.demo.DTO.UserDTO;
 import com.twitter.demo.Resources.Email.Constant.EmailTemplate;
 import com.twitter.demo.Services.EmailService;
 import com.twitter.demo.Services.UserService;
@@ -10,6 +11,8 @@ import com.twitter.demo.modal.UserProfile;
 import com.twitter.demo.repository.UserProfileRepository;
 import com.twitter.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -85,14 +88,27 @@ public class RestController extends Thread {
         }
     }
 
-    @GetMapping("/getAll")
-    public List<User> GetAllUsers() {
-        List<User> users = new ArrayList<>();
+    @GetMapping(value = "/getAll", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<List<UserDTO>> GetAllUsers() {
+
+        List<UserDTO> lstUserDTO = new ArrayList<>();
+
         for (User user : userRepository.findAll()) {
-            users.add(user);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserName(user.getUserName());
+
+            UserProfile profile = user.getUserProfile();
+            userDTO.setFirstName(profile.getFirstName());
+            userDTO.setMiddleName(profile.getMiddleName());
+            userDTO.setLastName(profile.getLastName());
+            userDTO.setPhone(profile.getPhone());
+            userDTO.setAddress(profile.getAddress());
+            userDTO.setEmailId(profile.getEmailId());
+
+            lstUserDTO.add(userDTO);
         }
 
-        return users;
+        return new ResponseEntity<List<UserDTO>>(lstUserDTO, HttpStatus.OK);
     }
 
 }
