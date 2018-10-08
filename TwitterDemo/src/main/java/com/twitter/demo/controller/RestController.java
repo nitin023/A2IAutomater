@@ -7,8 +7,19 @@ import com.twitter.demo.modal.Email;
 import com.twitter.demo.modal.User;
 import com.twitter.demo.modal.UserContext;
 import com.twitter.demo.modal.UserProfile;
+import com.twitter.demo.repository.UserProfileRepository;
+import com.twitter.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 
 @org.springframework.web.bind.annotation.RestController
@@ -20,6 +31,10 @@ public class RestController extends Thread {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserProfileRepository userProfileRepository;
 
     @PostMapping("/addUser")
     public String saveUserInfo(@RequestBody UserContext userContext) {
@@ -46,4 +61,38 @@ public class RestController extends Thread {
 
         return sb.toString();
     }
+
+    @GetMapping("/Users/{id}")
+    public String getUser(@PathVariable long id) {
+        Optional<User> user = userRepository.findById(id);
+        Optional<UserProfile> profile = userProfileRepository.findById(id);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            //StringBuilder response = new StringBuilder();
+            //response.append(user.get().getUserName()).append("\n").append(user.get().getPassword());
+
+            String jsonInString = mapper.writeValueAsString(user.get().getUserName() + profile.get().getFirstName());
+            return jsonInString;
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+            return "";
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @GetMapping("/getAll")
+    public List<User> GetAllUsers() {
+        List<User> users = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            users.add(user);
+        }
+
+        return users;
+    }
+
 }
