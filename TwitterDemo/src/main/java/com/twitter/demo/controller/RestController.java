@@ -60,18 +60,16 @@ public class RestController extends Thread {
         return sb.toString();
     }
 
-    @PostMapping(value = "/getUser", produces = "application/json" , consumes = "application/json")
+    @PostMapping(value = "/getUser", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> getUser(@RequestBody User user) {
 
         String username = user.getUserName();
-        String password = user.getPassword() ;
+        String password = user.getPassword();
 
         UserDTO userDTO = new UserDTO();
         for (User userIter : userRepository.findAll()) {
-            if(userIter.getUserName().toLowerCase().contains(username))
-            {
-                if(userIter.getPassword().contains(password))
-                {
+            if (userIter.getUserName().toLowerCase().contains(username)) {
+                if (userIter.getPassword().contains(password)) {
                     userDTO.setUserName(userIter.getUserName());
 
                     UserProfile profile = userIter.getUserProfile();
@@ -116,18 +114,65 @@ public class RestController extends Thread {
     //this updates emailApproved field
     @PutMapping(value = "users/{userId}", produces = "application/json")
     public ResponseEntity<?> approveUserEmail(@PathVariable long userId) {
-        User  userFound = userRepository.findByUserId(userId);
+        User userFound = userRepository.findByUserId(userId);
         UserProfile userProfile = userFound.getUserProfile();
 
         boolean response = false;
-        if(!userProfile.isEmailApproved()) {
+        if (!userProfile.isEmailApproved()) {
             userProfile.setEmailApproved(true);
             userFound.setUserProfile(userProfile);
             userRepository.save(userFound);
             response = true;
         }
-        return new ResponseEntity(response,HttpStatus.OK);
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    //update user profile based on userId
+    @PutMapping(value = "users/{userId}/update", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UserContext userContext, @PathVariable long userId) {
+        //fetch old profile
+        User userFound = userRepository.findByUserId(userId);
+        UserProfile oldProfile = userFound.getUserProfile();
+
+        //extracts new profile
+        User newUser = userContext.getUser();
+        UserProfile newProfile = userContext.getUserProfile();
+
+        if (newUser.getPassword() != null && !newUser.getPassword().isEmpty()) {
+            userFound.setPassword(newUser.getPassword());
+        }
+        if (newProfile.getFirstName() != null && !newProfile.getFirstName().isEmpty())
+            oldProfile.setFirstName(newProfile.getFirstName());
+
+        if (newProfile.getMiddleName() != null && !newProfile.getMiddleName().isEmpty())
+            oldProfile.setMiddleName(newProfile.getMiddleName());
+
+        if (newProfile.getLastName() != null && !newProfile.getLastName().isEmpty())
+            oldProfile.setLastName(newProfile.getLastName());
+
+        if (newProfile.getEmailId() != null && !newProfile.getEmailId().isEmpty())
+            oldProfile.setEmailId(newProfile.getEmailId());
+
+        if (newProfile.getAddress() != null && !newProfile.getAddress().isEmpty())
+            oldProfile.setAddress(newProfile.getAddress());
+
+        if (newProfile.getPhone() != null && !newProfile.getPhone().isEmpty())
+            oldProfile.setPhone(newProfile.getPhone());
+
+        userFound.setUserProfile(oldProfile);
+        userRepository.save(userFound);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserName(userFound.getUserName());
+        userDTO.setPassword(userFound.getPassword());
+        userDTO.setEmailId(newProfile.getEmailId());
+        userDTO.setAddress(newProfile.getAddress());
+        userDTO.setFirstName(newProfile.getFirstName());
+        userDTO.setMiddleName(newProfile.getMiddleName());
+        userDTO.setLastName(newProfile.getLastName());
+        userDTO.setPhone(newProfile.getPhone());
+
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
 
 }
