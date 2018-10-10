@@ -15,14 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 
 @org.springframework.web.bind.annotation.RestController
@@ -65,31 +60,38 @@ public class RestController extends Thread {
         return sb.toString();
     }
 
-    @GetMapping("/Users/{id}")
-    public String getUser(@PathVariable long id) {
-        Optional<User> user = userRepository.findById(id);
-        Optional<UserProfile> profile = userProfileRepository.findById(id);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            //StringBuilder response = new StringBuilder();
-            //response.append(user.get().getUserName()).append("\n").append(user.get().getPassword());
+    @PostMapping(value = "/getUser", produces = "application/json" , consumes = "application/json")
+    public ResponseEntity<?> getUser(@RequestBody User user) {
 
-            String jsonInString = mapper.writeValueAsString(user.get().getUserName() + profile.get().getFirstName());
-            return jsonInString;
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-            return "";
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-            return "";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
+        String username = user.getUserName();
+        String password = user.getPassword() ;
+
+        UserDTO userDTO = new UserDTO();
+        for (User userIter : userRepository.findAll()) {
+            if(userIter.getUserName().toLowerCase().contains(username))
+            {
+                if(userIter.getPassword().contains(password))
+                {
+                    userDTO.setUserName(userIter.getUserName());
+
+                    UserProfile profile = userIter.getUserProfile();
+                    userDTO.setFirstName(profile.getFirstName());
+                    userDTO.setMiddleName(profile.getMiddleName());
+                    userDTO.setLastName(profile.getLastName());
+                    userDTO.setPhone(profile.getPhone());
+                    userDTO.setAddress(profile.getAddress());
+                    userDTO.setEmailId(profile.getEmailId());
+                    userDTO.setPassword(userIter.getPassword());
+                    userDTO.setPhone(profile.getPhone());
+                    break;
+                }
+            }
         }
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getAll", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<List<UserDTO>> GetAllUsers() {
+    public ResponseEntity<?> GetAllUsers() {
 
         List<UserDTO> lstUserDTO = new ArrayList<>();
 
@@ -110,5 +112,22 @@ public class RestController extends Thread {
 
         return new ResponseEntity<List<UserDTO>>(lstUserDTO, HttpStatus.OK);
     }
+
+    //this updates emailApproved field
+    @PutMapping(value = "users/{userId}", produces = "application/json")
+    public ResponseEntity<?> approveUserEmail(@PathVariable long userId) {
+        User  userFound = userRepository.findByUserId(userId);
+        UserProfile userProfile = userFound.getUserProfile();
+
+        boolean response = false;
+        if(!userProfile.isEmailApproved()) {
+            userProfile.setEmailApproved(true);
+            userFound.setUserProfile(userProfile);
+            userRepository.save(userFound);
+            response = true;
+        }
+        return new ResponseEntity(response,HttpStatus.OK);
+    }
+
 
 }
