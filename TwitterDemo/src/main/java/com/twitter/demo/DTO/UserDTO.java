@@ -1,8 +1,6 @@
 package com.twitter.demo.DTO;
 
 
-import com.twitter.demo.modal.UserProfile;
-
 public class UserDTO {
 
     private String password;
