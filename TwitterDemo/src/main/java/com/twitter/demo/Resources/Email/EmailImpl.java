@@ -1,10 +1,11 @@
 package com.twitter.demo.Resources.Email;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -37,7 +38,7 @@ public class EmailImpl implements IEmail {
             message.setContent(emailContent, "text/html");
 
             Transport.send(message);
-            System.out.println("send sucess");
+            System.out.println("send success");
         } catch (MessagingException mexp) {
             mexp.printStackTrace();
         }
@@ -57,31 +58,26 @@ public class EmailImpl implements IEmail {
     }
 
     public Session getSessionInfo(Properties props) {
-        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+        return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(EmailConstants.SENDER_NAME, EmailConstants.SENDER_PASSWORD);
             }
         });
-        return session;
     }
 
     public String getEmailTemplate(String template) {
-        File file = new File("/home/nitin/IdeaProjects/TwitterDemo/src/main/java/com/twitter/demo/Resources/Email/Templates/" + getTemplateType(template));
-        String html_trimmed = "";
-        Scanner scanner = null;
+        StringBuilder htmlTemplate = new StringBuilder("");
         try {
-            scanner = new Scanner(new FileReader(file));
-            while (scanner.hasNextLine()) {
-                String s = scanner.nextLine();
-                String tmp = s.trim();
-                html_trimmed = html_trimmed.concat(tmp);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            scanner.close();
+            FileReader fileReader = new FileReader("src/main/resources/templates/Email/" + getTemplateType(template));
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            Stream<String> lines = bufferedReader.lines();
+
+            lines.forEach(htmlTemplate::append);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return html_trimmed;
+        return htmlTemplate.toString();
     }
 
     public String getTemplateType(String template) {
