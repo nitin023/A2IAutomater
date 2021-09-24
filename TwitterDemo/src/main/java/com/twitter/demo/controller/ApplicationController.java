@@ -1,20 +1,16 @@
 package com.twitter.demo.controller;
 
 import com.twitter.demo.Constant.EmailTemplate;
-import com.twitter.demo.service.serviceImpl.EmailServiceImpl;
+import com.twitter.demo.DTO.EmailDTO;
+import com.twitter.demo.entity.Appointment;
 import com.twitter.demo.service.AppointmentService;
 import com.twitter.demo.service.UserActionService;
-import com.twitter.demo.entity.Appointment;
-import com.twitter.demo.DTO.EmailDTO;
 import com.twitter.demo.service.serviceImpl.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ApplicationController {
-
-    @Autowired
-    EmailServiceImpl emailService;
 
     @Autowired
     SmsService smsService;

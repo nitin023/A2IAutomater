@@ -1,5 +1,7 @@
 package com.twitter.demo.service.serviceImpl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -12,19 +14,40 @@ import javax.mail.internet.MimeMessage;
 
 import com.twitter.demo.Constant.ApplicationConstants;
 import com.twitter.demo.DTO.CommunicationData;
+import com.twitter.demo.entity.InspectionTask;
+import com.twitter.demo.repository.InspectionTaskRepository;
 import com.twitter.demo.service.EmailService;
 import com.twitter.demo.utils.TemplateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailServiceImpl implements EmailService {
 
+  @Autowired
+    InspectionTaskRepository inspectionTaskRepository;
+
+    //@Async("asyncExecutor")
     public void sendEmailAndCreateTask(CommunicationData communicationData) {
-        if(communicationData.getToEmailId() != null) {
-            communicationData.setContent(TemplateUtils.replaceContnetInTemplate(communicationData));
-            if(sendEmail(communicationData)){
-                //TODO :: Save Inspection Task In DB :: Sangita
+        try {
+            if (communicationData.getToEmailId() != null) {
+                communicationData.setContent(TemplateUtils.replaceContnetInTemplate(communicationData));
+                if (sendEmail(communicationData)) {
+                    InspectionTask inspectionTask = new InspectionTask();
+                    inspectionTask.setEmailId(communicationData.getFromEmailId());
+                    inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().id);
+                    Date date1;
+                    date1 = new SimpleDateFormat("dd/MM/yyyy").parse(communicationData.getAppointmentDTO().getDate());
+                    inspectionTask.setAppointmentDate(date1);
+                    inspectionTask.setFName(communicationData.getName());
+                    inspectionTask.setPhoneNumber(communicationData.getFromPhoneNumber());
+                    inspectionTaskRepository.save(inspectionTask);
+                }
             }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 

@@ -3,6 +3,7 @@ package com.twitter.demo.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "inspection_task")
@@ -13,7 +14,7 @@ public class InspectionTask {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String appointmentId;
-    private String appointmentDate;
+    private Date appointmentDate;
     private String emailId;
     private String phoneNumber;
     private String status;

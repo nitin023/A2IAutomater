@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,10 +32,13 @@ public class InspectionTaskService {
         //TODO:: Nitin -> Fetch Data from DB :: where appointmentDate <= currentDate &&  appointmentDate == currentDate+1 and status != Cancelled and attemptcount is less than maxLimit
         String status = "Cancelled";
         Date currentDate = new Date();
-        List<InspectionTask> inspectionTaskList =  inspectionTaskRepository.findByAppointmentDateAndStatus(status,currentDate);
+        Date currentDatePlusOneDay = new Date();
+        LocalDateTime.from(currentDatePlusOneDay.toInstant()).plusDays(1);
+
+        List<InspectionTask> inspectionTaskList =  inspectionTaskRepository.findByAppointmentDateAndStatus(status,currentDate,currentDatePlusOneDay);
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         for(InspectionTask inspectionTask : inspectionTaskList){
-            String appointmentDate = inspectionTask.getAppointmentDate();
+            Date appointmentDate = inspectionTask.getAppointmentDate();
             DateTime apd = new DateTime(appointmentDate);
             CommunicationData communicationData = new CommunicationData();
             String emailContent = TemplateUtils.getEmailTemplate(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
