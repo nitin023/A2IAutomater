@@ -33,9 +33,6 @@ public class InspectionTaskService {
     @Autowired
     private SmsSender smsSender;
 
-    @Autowired
-    private MessageDeliveryStatusRepository messageDeliveryStatusRepository;
-
     public void inspect() {
         List<InspectionDTO> inspectionDTOList = fetchAllInspections();
         if(!CollectionUtils.isEmpty(inspectionDTOList)){
