@@ -1,4 +1,4 @@
-package com.twitter.demo.model;
+package com.twitter.demo.entity;
 
 import lombok.Data;
 

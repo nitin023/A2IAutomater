@@ -1,4 +1,4 @@
-package com.twitter.demo.sms.service;
+package com.twitter.demo.service.serviceImpl;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twitter.demo.Constant.EmailTemplate;

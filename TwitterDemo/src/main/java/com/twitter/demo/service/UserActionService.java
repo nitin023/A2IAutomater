@@ -1,6 +1,6 @@
 package com.twitter.demo.service;
 
-import com.twitter.demo.model.UserAction;
+import com.twitter.demo.entity.UserAction;
 
 
 public interface UserActionService {

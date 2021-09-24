@@ -1,6 +1,6 @@
 package com.twitter.demo.service.serviceImpl;
 
-import com.twitter.demo.model.Appointment;
+import com.twitter.demo.entity.Appointment;
 import com.twitter.demo.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,6 @@ import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.CommunicationData;
 import com.twitter.demo.entity.InspectionTask;
 import com.twitter.demo.repository.InspectionTaskRepository;
-import com.twitter.demo.sms.service.SmsService;
 import com.twitter.demo.utils.TemplateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;

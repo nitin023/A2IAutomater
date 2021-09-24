@@ -1,5 +1,5 @@
-package com.twitter.demo.model.enums;
+package com.twitter.demo.enums;
 
-public enum Action {
+public enum ActionEnum {
     RESCHEDULE_APPOINTMENT, CANCEL_APPOINTMENT, ATTENDING_APPOINTMENT;
 }

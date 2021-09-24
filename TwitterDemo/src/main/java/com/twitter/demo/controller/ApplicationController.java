@@ -1,13 +1,12 @@
 package com.twitter.demo.controller;
 
 import com.twitter.demo.Constant.EmailTemplate;
-import com.twitter.demo.DTO.BookedLeadsDto;
 import com.twitter.demo.service.serviceImpl.EmailServiceImpl;
 import com.twitter.demo.service.AppointmentService;
 import com.twitter.demo.service.UserActionService;
-import com.twitter.demo.model.Appointment;
-import com.twitter.demo.model.Email;
-import com.twitter.demo.sms.service.SmsService;
+import com.twitter.demo.entity.Appointment;
+import com.twitter.demo.DTO.EmailDTO;
+import com.twitter.demo.service.serviceImpl.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class ApplicationController {
     @ResponseBody
     @RequestMapping("/send-email")
     public String sendEmail() {
-        Email email = new Email("test email", "komal.sharma1@olx.com", EmailTemplate.APP_VERIFY);
+        EmailDTO emailDTO = new EmailDTO("test email", "komal.sharma1@olx.com", EmailTemplate.APP_VERIFY);
        // emailService.setSendMail(email);
         return "Email sent";
     }
