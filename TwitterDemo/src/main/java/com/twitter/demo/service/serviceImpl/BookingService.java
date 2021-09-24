@@ -3,6 +3,8 @@ package com.twitter.demo.service.serviceImpl;
 
 import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.*;
+import com.twitter.demo.enums.StateEnum;
+import com.twitter.demo.enums.StatusEnum;
 import com.twitter.demo.service.EmailService;
 import com.twitter.demo.service.RestService;
 import com.twitter.demo.utils.TemplateUtils;
@@ -33,6 +35,8 @@ public class BookingService {
                     CommunicationData communicationData = new CommunicationData();
                     updateEmailMetaData(communicationData,emailContent);
                     updateContactDetails(communicationData,inspectionDTO);
+                    communicationData.setState(StateEnum.TRANSACTIONAL.name());
+                    communicationData.setStatus(StatusEnum.IN_PROGRESS.name());
                     updateAndProcessAppointment(communicationData,inspectionDTO);
                 }
         }

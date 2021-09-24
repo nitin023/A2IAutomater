@@ -7,9 +7,12 @@ import com.twitter.demo.DTO.CommunicationData;
 import com.twitter.demo.entity.InspectionTask;
 import com.twitter.demo.repository.InspectionTaskRepository;
 import com.twitter.demo.utils.TemplateUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,15 +32,19 @@ public class SmsService {
 
             if (communicationData.getToPhoneNumber() != null) {
                 if (sendSMS(communicationData)) {
-                    //TODO :: Save Inspection Task In DB :: Sangita
-                    InspectionTask inspectionTask = new InspectionTask();
-                    inspectionTask.setEmailId(communicationData.getFromEmailId());
+                    InspectionTask inspectionTask = inspectionTaskRepository.findByAppointmentId(communicationData.getAppointmentDTO().getBookingId());
+                    if (inspectionTask == null) {
+                        inspectionTask = new InspectionTask();
+                    }
+                    inspectionTask.setEmailId(communicationData.getToEmailId());
                     inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().getBookingId());
-                    Date date1;
-                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(communicationData.getAppointmentDTO().getDate());
-                    inspectionTask.setAppointmentDate(date1);
-                    inspectionTask.setFName(communicationData.getName());
-                    inspectionTask.setPhoneNumber(communicationData.getFromPhoneNumber());
+                    Date date = new Date();
+                    Timestamp ts = new Timestamp(date.getTime());
+                    inspectionTask.setAppointmentDate(ts);
+                    inspectionTask.setName(communicationData.getName());
+                    inspectionTask.setPhoneNumber(communicationData.getToPhoneNumber());
+                    inspectionTask.setStatus(communicationData.getStatus());
+                    inspectionTask.setState(communicationData.getState());
                     inspectionTaskRepository.save(inspectionTask);
                 }
 

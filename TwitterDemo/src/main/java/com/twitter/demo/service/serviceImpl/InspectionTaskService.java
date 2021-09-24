@@ -6,9 +6,11 @@ import com.twitter.demo.entity.InspectionTask;
 import com.twitter.demo.repository.InspectionTaskRepository;
 import com.twitter.demo.utils.TemplateUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -28,30 +30,38 @@ public class InspectionTaskService {
     @Autowired
     private InspectionTaskRepository inspectionTaskRepository;
 
-    private void processBooking() throws ParseException {
-        //TODO:: Nitin -> Fetch Data from DB :: where appointmentDate <= currentDate &&  appointmentDate == currentDate+1 and status != Cancelled and attemptcount is less than maxLimit
-        String status = "Cancelled";
-        Date currentDate = new Date();
-        Date currentDatePlusOneDay = new Date();
-        LocalDateTime.from(currentDatePlusOneDay.toInstant()).plusDays(1);
+    public void processBooking() {
+        try {
+            String status = "Cancelled";
+            DateTime currentDate = new DateTime();
+            DateTime currentDatePlusOneDay = currentDate.plusDays(1);
 
-        List<InspectionTask> inspectionTaskList =  inspectionTaskRepository.findByAppointmentDateAndStatus(status,currentDate,currentDatePlusOneDay);
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-        for(InspectionTask inspectionTask : inspectionTaskList){
-            Date appointmentDate = inspectionTask.getAppointmentDate();
-            DateTime apd = new DateTime(appointmentDate);
-            CommunicationData communicationData = new CommunicationData();
-            String emailContent = TemplateUtils.getEmailTemplate(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
-            updateEmailMetaData(communicationData,emailContent);
-            updateContactDetails(communicationData,inspectionTask);
-            executorService.submit(() -> {
-                if(apd.minusDays(1).equals(currentDate) || apd.equals(currentDate))
-                {
-                    //d-1 day
-                    emailService.sendEmailAndCreateTask(communicationData);
-                    smsService.sendSMSAndCreateTask(communicationData);
-                }
-            });
+            Timestamp ts = new Timestamp(currentDate.getMillis());
+            Timestamp tsP = new Timestamp(currentDatePlusOneDay.getMillis());
+
+            List<InspectionTask> inspectionTaskList = inspectionTaskRepository.findByAppointmentDateAndStatus(status, ts, tsP);
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            for (InspectionTask inspectionTask : inspectionTaskList) {
+                Date appointmentDate = inspectionTask.getAppointmentDate();
+
+                DateTime dayBeforeDate = new DateTime(appointmentDate).minusDays(1);
+                Date adpDate = new Date(dayBeforeDate.getMillis());
+
+                CommunicationData communicationData = new CommunicationData();
+                String emailContent = TemplateUtils.getEmailTemplate(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
+                updateEmailMetaData(communicationData, emailContent);
+                updateContactDetails(communicationData, inspectionTask);
+                executorService.submit(() -> {
+                    //adpDate.compareTo(new Date(currentDate.getMillis()))
+                    if (true || adpDate.equals(currentDate) || appointmentDate.equals(currentDate)) {
+                        //d-1 day
+                        emailService.sendEmailAndCreateTask(communicationData);
+                        smsService.sendSMSAndCreateTask(communicationData);
+                    }
+                });
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
 
@@ -67,8 +77,8 @@ public class InspectionTaskService {
     }
 
     private void updateContactDetails(CommunicationData communicationData, InspectionTask inspectionTask) {
-            communicationData.setToEmailId(inspectionTask.getEmailId());
-            communicationData.setToPhoneNumber(inspectionTask.getPhoneNumber());
-            communicationData.setName(inspectionTask.getFName() + " "+inspectionTask.getLName());
+        communicationData.setToEmailId(inspectionTask.getEmailId());
+        communicationData.setToPhoneNumber(inspectionTask.getPhoneNumber());
+        communicationData.setName(inspectionTask.getName());
     }
 }

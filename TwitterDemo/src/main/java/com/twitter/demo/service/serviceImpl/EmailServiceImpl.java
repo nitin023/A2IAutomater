@@ -1,5 +1,6 @@
 package com.twitter.demo.service.serviceImpl;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -34,14 +35,19 @@ public class EmailServiceImpl implements EmailService {
             if (communicationData.getToEmailId() != null) {
                 communicationData.setContent(TemplateUtils.replaceContnetInTemplate(communicationData));
                 if (sendEmail(communicationData)) {
-                    InspectionTask inspectionTask = new InspectionTask();
-                    inspectionTask.setEmailId(communicationData.getFromEmailId());
+                    InspectionTask inspectionTask = inspectionTaskRepository.findByAppointmentId(communicationData.getAppointmentDTO().getBookingId());
+                    if(inspectionTask==null){
+                        inspectionTask = new InspectionTask();
+                    }
+                    inspectionTask.setEmailId(communicationData.getToEmailId());
                     inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().getBookingId());
-                    Date date1;
-                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(communicationData.getAppointmentDTO().getDate());
-                    inspectionTask.setAppointmentDate(date1);
-                    inspectionTask.setFName(communicationData.getName());
-                    inspectionTask.setPhoneNumber(communicationData.getFromPhoneNumber());
+                    Date date = new Date();
+                    Timestamp ts = new Timestamp(date.getTime());
+                    inspectionTask.setAppointmentDate(ts);
+                    inspectionTask.setName(communicationData.getName());
+                    inspectionTask.setPhoneNumber(communicationData.getToPhoneNumber());
+                    inspectionTask.setStatus(communicationData.getStatus());
+                    inspectionTask.setState(communicationData.getState());
                     inspectionTaskRepository.save(inspectionTask);
                 }
             }

@@ -15,6 +15,7 @@ public class CommunicationData {
     private String templateName;
     private String name;
     private AppointmentDTO appointmentDTO;
-
+    private String state;
+    private String status;
 
 }
