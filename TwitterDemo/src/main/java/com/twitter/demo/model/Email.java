@@ -1,4 +1,4 @@
-package com.twitter.demo.modal;
+package com.twitter.demo.model;
 
 
     public class Email {

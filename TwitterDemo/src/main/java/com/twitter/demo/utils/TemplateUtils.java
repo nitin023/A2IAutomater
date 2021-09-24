@@ -17,7 +17,7 @@ public class TemplateUtils {
     public static String getEmailTemplate(String template) {
         StringBuilder htmlTemplate = new StringBuilder("");
         try {
-            FileReader fileReader = new FileReader("src/main/resources/templates/Email/" + getTemplateType(template));
+            FileReader fileReader = new FileReader("src/main/resources/templates/" + getTemplateType(template));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             Stream<String> lines = bufferedReader.lines();
 
@@ -57,7 +57,7 @@ public class TemplateUtils {
                     response = "AccountVerification.html";
                     break;
                 case EmailTemplate.BOOKING_INFORMATION:
-                    response = "UserBookingInformationTemplate.html";
+                    response = "welcome.html";
                     break;
             }
         return response;

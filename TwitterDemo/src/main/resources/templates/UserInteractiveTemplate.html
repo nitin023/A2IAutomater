@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Olx Auto</title>
@@ -74,7 +75,7 @@ display:flex
 <div>
     <div id="username-div" class="user"></div>
     <br/>
-    <div class="display-info"> you have car inspection booking with id
+    <div class="display-info"> You have car inspection booking with id
         <pre> </pre>
         <div id="booking-id" style="font-weight:700"></div>
         <pre> </pre>
@@ -87,19 +88,11 @@ display:flex
 
     <br/>
 
-    <form>
-        <div id="actionDiv" style="display:flex">
-            <input type="radio" id="cancelAppointment" name="fav_language" value="Cancel">
-            <label for="cancelAppointment">Cancel</label><br>
-            <input type="radio" id="rescheduleAppointment" name="fav_language" value="Reschedule">
-            <label for="rescheduleAppointment">Reschedule</label><br>
-        </div>
-        <br/>
-        <textarea id="w3review" name="w3review" rows="4" cols="50">
-       Feedback and suggestions
-  </textarea>
-        <br/><br/>
-        <button class="button-3" role="button" onclick="callPageInteractionApi()">Submit</button>
+    <form action="http://localhost:8080/api/v1/add/actions" th:action="@{/api/v1/add/actions}" method="post" th:object="${userAction}">
+        <label>Choose Action:</label>
+        <input type="radio" th:field="*{action}" value="Cancel" />Cancel Appointment<br/>
+        <input type="radio" th:field="*{action}" value="Reschedule" />Reschedule Appointment<br/>
+        <button type="submit">Register</button>
     </form>
 </div>
 </body>
