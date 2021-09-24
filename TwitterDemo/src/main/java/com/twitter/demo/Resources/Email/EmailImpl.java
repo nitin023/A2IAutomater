@@ -1,10 +1,7 @@
 package com.twitter.demo.Resources.Email;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 import javax.mail.Message;
@@ -15,8 +12,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.twitter.demo.Resources.Email.Constant.EmailConstants;
-import com.twitter.demo.Resources.Email.Constant.EmailTemplate;
+import com.twitter.demo.Constant.ApplicationConstants;
+import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.modal.Email;
 
 
@@ -32,7 +29,7 @@ public class EmailImpl implements IEmail {
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EmailConstants.SENDER_NAME));
+            message.setFrom(new InternetAddress(ApplicationConstants.SENDER_NAME));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailInfo.getReciepent()));
             message.setSubject(emailInfo.getSubject());
             message.setContent(emailContent, "text/html");
@@ -60,7 +57,7 @@ public class EmailImpl implements IEmail {
     public Session getSessionInfo(Properties props) {
         return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EmailConstants.SENDER_NAME, EmailConstants.SENDER_PASSWORD);
+                return new PasswordAuthentication(ApplicationConstants.SENDER_NAME, ApplicationConstants.SENDER_PASSWORD);
             }
         });
     }
