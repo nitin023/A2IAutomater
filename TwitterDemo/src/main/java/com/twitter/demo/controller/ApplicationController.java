@@ -6,20 +6,20 @@ import com.twitter.demo.Services.EmailService;
 import com.twitter.demo.Services.UserActionService;
 import com.twitter.demo.modal.Email;
 import com.twitter.demo.modal.UserAction;
+import com.twitter.demo.sms.service.SmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Locale;
-
-@Controller
+@RestController
 public class ApplicationController {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    SmsSender smsSender;
 
     @Autowired
     UserActionService userActionService;
@@ -28,12 +28,6 @@ public class ApplicationController {
     @RequestMapping("/send-email")
     public String sendEmail() {
         Email email = new Email("test email", "komal.sharma1@olx.com", EmailTemplate.APP_VERIFY);
-        emailService.setSendMail(email);
-
-        email = new Email("test email", "vipul.pachauri@olx.com", EmailTemplate.APP_VERIFY);
-        emailService.setSendMail(email);
-
-        email = new Email("test email", "dharmendra.singh@olx.com", EmailTemplate.APP_VERIFY);
         emailService.setSendMail(email);
         return "Email sent";
     }
@@ -48,5 +42,12 @@ public class ApplicationController {
         return "success";
 
 
+    }
+
+    @RequestMapping("/sendSms/{toPhoneNumber}")
+    public String sendSms(@PathVariable String toPhoneNumber)
+    {
+        smsSender.sendSMS(toPhoneNumber);
+        return "Sms sent";
     }
 }
