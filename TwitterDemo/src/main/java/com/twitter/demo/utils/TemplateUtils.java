@@ -57,7 +57,7 @@ public class TemplateUtils {
                     response = "AccountVerification.html";
                     break;
                 case EmailTemplate.BOOKING_INFORMATION:
-                    response = "welcome.html";
+                    response = "UserBookingInformationTemplate.html";
                     break;
                 case EmailTemplate.USER_INTERACTIVE_TEMPLATE:
                     response = "UserInteractiveTemplate.html";
