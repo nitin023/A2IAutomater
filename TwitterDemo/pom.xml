@@ -223,5 +223,11 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>5.1.0.RELEASE</version>
+        </dependency>
+
     </dependencies>
 </project>

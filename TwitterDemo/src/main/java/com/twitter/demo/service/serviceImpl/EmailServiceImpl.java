@@ -36,9 +36,9 @@ public class EmailServiceImpl implements EmailService {
                 if (sendEmail(communicationData)) {
                     InspectionTask inspectionTask = new InspectionTask();
                     inspectionTask.setEmailId(communicationData.getFromEmailId());
-                    inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().id);
+                    inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().getBookingId());
                     Date date1;
-                    date1 = new SimpleDateFormat("dd/MM/yyyy").parse(communicationData.getAppointmentDTO().getDate());
+                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(communicationData.getAppointmentDTO().getDate());
                     inspectionTask.setAppointmentDate(date1);
                     inspectionTask.setFName(communicationData.getName());
                     inspectionTask.setPhoneNumber(communicationData.getFromPhoneNumber());
@@ -67,6 +67,7 @@ public class EmailServiceImpl implements EmailService {
             message.setContent(emailContent, "text/html");
             Transport.send(message);
             System.out.println("send success");
+            response = true;
         } catch (MessagingException mexp) {
             mexp.printStackTrace();
         }
