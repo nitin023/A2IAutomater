@@ -17,25 +17,25 @@ public class AppointmentDTO {
     public String time;
     public String inspectionPointCity;
     public String inspectionPointName;
-    public Object rejectionReasons;
+    public String rejectionReasons;
     public String bookingSource;
     public String createdAt;
-    public Object createdByUserEmail;
+    public String createdByUserEmail;
     public String updatedAt;
-    public Object updatedByUserEmail;
+    public String updatedByUserEmail;
     public String placeId;
     public String status;
-    public Object comments;
-    public Object cancellationReason;
-    public Object callStatus;
-    public Object cancelledInStatus;
-    public Object cancelledAt;
-    public Object assignedTo;
-    public Object assignedToName;
+    public String comments;
+    public String cancellationReason;
+    public String callStatus;
+    public String cancelledInStatus;
+    public String cancelledAt;
+    public String assignedTo;
+    public String assignedToName;
     public String type;
     public String service;
-    public Object address;
-    public Object purchaseCoordinator;
-    public List<Object> participants;
+    public String address;
+    public String purchaseCoordinator;
+    public List<String> participants;
 
 }

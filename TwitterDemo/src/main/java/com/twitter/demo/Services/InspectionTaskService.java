@@ -1,137 +1,72 @@
 package com.twitter.demo.Services;
 
-
-import com.twilio.twiml.voice.Sms;
 import com.twitter.demo.Constant.EmailTemplate;
-import com.twitter.demo.DTO.*;
+import com.twitter.demo.DTO.CommunicationData;
 import com.twitter.demo.Resources.Email.EmailImpl;
-import com.twitter.demo.Resources.Email.IEmail;
-import com.twitter.demo.sms.service.SmsSender;
+import com.twitter.demo.entity.InspectionTask;
+import com.twitter.demo.repository.InspectionTaskRepository;
+import com.twitter.demo.sms.service.SmsService;
 import com.twitter.demo.utils.TemplateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class InspectionTaskService {
 
     @Autowired
-    private RestService restService;
+    private EmailImpl emailService;
 
     @Autowired
-    private IEmail emailService;
+    private SmsService smsService;
 
     @Autowired
-    private SmsSender smsSender;
+    private InspectionTaskRepository inspectionTaskRepository;
 
-    public void inspect() {
-        List<InspectionDTO> inspectionDTOList = fetchAllInspections();
-        if(!CollectionUtils.isEmpty(inspectionDTOList)){
-               String templateName = EmailTemplate.BOOKING_INFORMATION;
-               String emailTemplate = getEmailContentTemplate(templateName);
-               List<CommunicationData> communicationDataList = new ArrayList<>();
-                for (InspectionDTO inspectionDTO : inspectionDTOList){
-                    CommunicationData communicationData = new CommunicationData();
-                    communicationData.setTemplateName(templateName);
-                    communicationData.setContent(emailTemplate);
-                    communicationData.setSubject(EmailTemplate.BOOKING_INFORMATION);
-                    ContactDTO contactDTO = inspectionDTO.getContact();
-                    if(null != contactDTO){
-                        communicationData.setToEmailId(contactDTO.getEmail());
-                        communicationData.setToPhoneNumber(contactDTO.getPhone());
-                        communicationData.setContent(emailTemplate);
-                        communicationData.setName(contactDTO.firstname + " "+contactDTO.lastname);
-                    }
-                    List<AppointmentDTO> appointmentDTOList = inspectionDTO.getAppointments();
-                    for(AppointmentDTO appointmentDTO:appointmentDTOList)
-                    {
-                            communicationData.setAppointmentDTO(appointmentDTO);
-                            String bookingDate = appointmentDTO.getCreatedAt();
-                            String appointmentDate = appointmentDTO.getDate();
-                    }
-                    communicationDataList.add(communicationData);
+    private void processBooking() throws ParseException {
+        //TODO:: Nitin -> Fetch Data from DB :: where appointmentDate <= currentDate &&  appointmentDate == currentDate+1 and status != Cancelled and attemptcount is less than maxLimit
+        String status = "Cancelled";
+        Date currentDate = new Date();
+        List<InspectionTask> inspectionTaskList =  inspectionTaskRepository.findByAppointmentDateAndStatus(status,currentDate);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        for(InspectionTask inspectionTask : inspectionTaskList){
+            String appointmentDate = inspectionTask.getAppointmentDate();
+            DateTime apd = new DateTime(appointmentDate);
+            CommunicationData communicationData = new CommunicationData();
+            String emailContent = TemplateUtils.getEmailTemplate(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
+            updateEmailMetaData(communicationData,emailContent);
+            updateContactDetails(communicationData,inspectionTask);
+            executorService.submit(() -> {
+                if(apd.minusDays(1).equals(currentDate) || apd.equals(currentDate))
+                {
+                    //d-1 day
+                    emailService.sendEmailAndCreateTask(communicationData);
+                    smsService.sendSMSAndCreateTask(communicationData);
                 }
+            });
         }
+
+
+
+
+
     }
 
-
-
-    private List<InspectionDTO> fetchAllInspections() {
-        List<InspectionDTO> inspectionDTOList = null;
-        try {
-            InspectionResponse inspectionResponse = restService.getInspectionData();
-            if(null != inspectionResponse && null != inspectionResponse.getData() && null != inspectionResponse.getData().getCarLeadData()){
-                inspectionDTOList =  inspectionResponse.getData().getCarLeadData().getInspectionDTOList();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return inspectionDTOList;
+    private void updateEmailMetaData(CommunicationData communicationData, String emailContent) {
+        communicationData.setTemplateName(EmailTemplate.BOOKING_INFORMATION);
+        communicationData.setContent(emailContent);
+        communicationData.setSubject("Inspection Reminder");
     }
 
-    private void executeSMSService(CommunicationData communicationData) {
-            if(communicationData.getToPhoneNumber() != null) {
-                smsSender.sendSMS(communicationData);
-
-        }
-    }
-
-    private void executeWhatsappService(CommunicationData communicationData) {
-    }
-
-    private void executeEmailService(CommunicationData communicationData) {
-            if(communicationData.getToEmailId() != null) {
-                String content = TemplateUtils.replaceContnetInTemplate(communicationData);
-                communicationData.setContent(content);
-                emailService.sendEmail(communicationData);
-        }
-    }
-
-    private String getEmailContentTemplate(String templateName) {
-        {
-            return TemplateUtils.getEmailTemplate(templateName);
-        }
-    }
-
-    private void processBooking(String appointmentDate,CommunicationData communicationData, String bookingDate) throws ParseException {
-        DateTime apd = new DateTime(appointmentDate);
-        DateTime booking = new DateTime(bookingDate);//new SimpleDateFormat("dd/MM/yyyy").parse(bookingDate);
-        DateTime date =  new DateTime();
-        String templateName="";
-        if(booking.equals(date)) //tday
-        {
-            templateName = EmailTemplate.BOOKING_INFORMATION;
-            communicationData.setTemplateName(templateName);
-            communicationData.setSubject(EmailTemplate.BOOKING_INFORMATION);
-            executeEmailService(communicationData);
-            executeSMSService(communicationData);
-            executeWhatsappService(communicationData);
-        }
-        if(apd.equals(date))
-        {
-            //send dday
-             templateName = EmailTemplate.USER_INTERACTIVE_TEMPLATE;
-             communicationData.setTemplateName(templateName);
-             communicationData.setSubject("Inspection Reminder");
-             executeEmailService(communicationData);
-             executeSMSService(communicationData);
-             executeWhatsappService(communicationData);
-        }
-       if(apd.minusDays(1).equals(date))
-       {
-           //d-1 day
-
-
-       }
-
+    private void updateContactDetails(CommunicationData communicationData, InspectionTask inspectionTask) {
+            communicationData.setToEmailId(inspectionTask.getEmailId());
+            communicationData.setToPhoneNumber(inspectionTask.getPhoneNumber());
+            communicationData.setName(inspectionTask.getFName() + " "+inspectionTask.getLName());
     }
 }

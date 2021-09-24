@@ -36,7 +36,7 @@ public class TemplateUtils {
             fileName = EmailTemplate.BOOKING_FILE;
         StringBuilder string = new StringBuilder("");
         try {
-        FileReader fileReader = new FileReader("src/main/resources/templates/Email/" + fileName);
+        FileReader fileReader = new FileReader("src/main/resources/templates/" + fileName);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String curLine;
         while ((curLine = bufferedReader.readLine()) != null){

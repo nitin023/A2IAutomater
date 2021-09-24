@@ -9,6 +9,8 @@ import javax.mail.Session;
 @Service
 public interface IEmail {
 
+    void sendEmailAndCreateTask(CommunicationData communicationData);
+
     Session getSessionInfo(Properties props);
 
     Properties getSMTPProperties();

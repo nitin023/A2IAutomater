@@ -3,7 +3,7 @@ package com.twitter.demo.Services;
 import com.twitter.demo.model.Appointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.twitter.demo.DTO.AppointmentRepository;
+import com.twitter.demo.repository.AppointmentRepository;
 
 import java.util.UUID;
 

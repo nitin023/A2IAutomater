@@ -1,6 +1,6 @@
 package com.twitter.demo.Services;
 
-import com.twitter.demo.DTO.UserActionRepository;
+import com.twitter.demo.repository.UserActionRepository;
 import com.twitter.demo.model.UserAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

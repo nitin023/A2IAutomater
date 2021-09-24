@@ -8,7 +8,7 @@ import com.twitter.demo.Services.IWAMessageService;
 import com.twitter.demo.Services.UserActionService;
 import com.twitter.demo.model.Appointment;
 import com.twitter.demo.model.Email;
-import com.twitter.demo.sms.service.SmsSender;
+import com.twitter.demo.sms.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class ApplicationController {
     EmailService emailService;
 
     @Autowired
-    SmsSender smsSender;
+    SmsService smsService;
 
     @Autowired
     UserActionService userActionService;

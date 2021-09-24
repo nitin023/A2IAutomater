@@ -12,10 +12,21 @@ import javax.mail.internet.MimeMessage;
 
 import com.twitter.demo.Constant.ApplicationConstants;
 import com.twitter.demo.DTO.CommunicationData;
+import com.twitter.demo.utils.TemplateUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailImpl implements IEmail {
+
+    public void sendEmailAndCreateTask(CommunicationData communicationData) {
+        if(communicationData.getToEmailId() != null) {
+            communicationData.setContent(TemplateUtils.replaceContnetInTemplate(communicationData));
+            if(sendEmail(communicationData)){
+                //TODO :: Save Inspection Task In DB :: Sangita
+            }
+        }
+    }
 
     public boolean sendEmail(CommunicationData communicationData) {
 
