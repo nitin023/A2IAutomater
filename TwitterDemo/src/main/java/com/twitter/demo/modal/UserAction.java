@@ -17,6 +17,7 @@ public class UserAction {
     private String action;
     private String feedback;
     private String suggestion;
+    private String appointmentId;
 
     public String getPhoneno() {
         return phoneno;
@@ -50,14 +51,11 @@ public class UserAction {
         this.suggestion = suggestion;
     }
 
-    @Override
-    public String toString() {
-        return "UserAction:{" +
-                "phoneNo='" + phoneno + '\'' +
-                ", action=" + action +
-                ", feedback='" + feedback + '\'' +
-                ", suggestion='" + suggestion + '\'' +
-                '}';
+    public String getAppointmentId() {
+        return appointmentId;
     }
 
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
+    }
 }

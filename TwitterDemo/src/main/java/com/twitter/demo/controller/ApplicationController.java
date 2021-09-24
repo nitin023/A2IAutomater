@@ -2,9 +2,11 @@ package com.twitter.demo.controller;
 
 import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.BookedLeadsDto;
+import com.twitter.demo.Services.AppointmentService;
 import com.twitter.demo.Services.EmailService;
 import com.twitter.demo.Services.IWAMessageService;
 import com.twitter.demo.Services.UserActionService;
+import com.twitter.demo.modal.Appointment;
 import com.twitter.demo.modal.Email;
 import com.twitter.demo.modal.UserAction;
 import com.twitter.demo.sms.service.SmsSender;
@@ -25,6 +27,9 @@ public class ApplicationController {
 
     @Autowired
     IWAMessageService waMessageService;
+
+    @Autowired
+    AppointmentService appointmentService;
 
     @ResponseBody
     @RequestMapping("/send-email")
@@ -58,5 +63,15 @@ public class ApplicationController {
         waMessageService.sendWAMessage(bookedLeadsDto);
 
         return "message sent successfully";
+    }
+
+    @PostMapping("/api/v1/add/appointment")
+    public String addAppointments(@RequestBody Appointment appointment){
+        try {
+            appointmentService.addAppointment(appointment);
+        }catch (Exception e){
+            return  e.getMessage();
+        }
+        return "success";
     }
 }
