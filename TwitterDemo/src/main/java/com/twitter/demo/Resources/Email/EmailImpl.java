@@ -1,8 +1,6 @@
 package com.twitter.demo.Resources.Email;
 
-import java.io.*;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,27 +11,26 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.twitter.demo.Constant.ApplicationConstants;
-import com.twitter.demo.Constant.EmailTemplate;
-import com.twitter.demo.modal.Email;
+import com.twitter.demo.DTO.CommunicationData;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class EmailImpl implements IEmail {
 
-    public boolean sendEmail(Email emailInfo) {
+    public boolean sendEmail(CommunicationData communicationData) {
 
         boolean response = false;
 
         Properties props = getSMTPProperties();
         Session session = getSessionInfo(props);
-        String emailContent = getEmailTemplate(emailInfo.getTemplate());
+        String emailContent = communicationData.getContent();
 
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(ApplicationConstants.SENDER_NAME));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailInfo.getReciepent()));
-            message.setSubject(emailInfo.getSubject());
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(communicationData.getToEmailId()));
+            message.setSubject(communicationData.getSubject());
             message.setContent(emailContent, "text/html");
-
             Transport.send(message);
             System.out.println("send success");
         } catch (MessagingException mexp) {
@@ -62,30 +59,5 @@ public class EmailImpl implements IEmail {
         });
     }
 
-    public String getEmailTemplate(String template) {
-        StringBuilder htmlTemplate = new StringBuilder("");
-        try {
-            FileReader fileReader = new FileReader("src/main/resources/templates/Email/" + getTemplateType(template));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            Stream<String> lines = bufferedReader.lines();
 
-            lines.forEach(htmlTemplate::append);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return htmlTemplate.toString();
-    }
-
-    public String getTemplateType(String template) {
-        String response = "";
-        if (template != null && !template.isEmpty())
-            switch (template) {
-                case EmailTemplate.APP_VERIFY:
-                    response = "AccountVerification.html";
-                    break;
-            }
-        return response;
-
-    }
 }

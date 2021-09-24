@@ -35,7 +35,7 @@ public class ApplicationController {
     @RequestMapping("/send-email")
     public String sendEmail() {
         Email email = new Email("test email", "komal.sharma1@olx.com", EmailTemplate.APP_VERIFY);
-        emailService.setSendMail(email);
+       // emailService.setSendMail(email);
         return "Email sent";
     }
 
@@ -53,7 +53,7 @@ public class ApplicationController {
 
     @RequestMapping("/sendSms/{toPhoneNumber}")
     public String sendSms(@PathVariable String toPhoneNumber) {
-        smsSender.sendSMS(toPhoneNumber);
+       // smsSender.sendSMS(toPhoneNumber);
         return "Sms sent";
     }
 

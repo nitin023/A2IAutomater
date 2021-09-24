@@ -9,9 +9,10 @@ public class CommunicationData {
     private String toEmailId;
     private String fromEmailId;
     private String subject;
-    private String emailContent;
+    private String content;
     private String toPhoneNumber;
     private String fromPhoneNumber;
+    private String templateName;
     private String name;
 
 }
