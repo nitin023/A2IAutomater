@@ -34,6 +34,8 @@ public class TemplateUtils {
         String fileName = "";
         if(template.equals(EmailTemplate.BOOKING_INFORMATION))
             fileName = EmailTemplate.BOOKING_FILE;
+        if(template.equals(EmailTemplate.USER_INTERACTIVE_TEMPLATE))
+            fileName = EmailTemplate.REMINDER_SMS;
         StringBuilder string = new StringBuilder("");
         try {
         FileReader fileReader = new FileReader("src/main/resources/templates/" + fileName);
@@ -78,7 +80,7 @@ public class TemplateUtils {
                 case EmailTemplate.BOOKING_INFORMATION:
                     content = StringUtils.replaceEach(template, new String[]{"userName","bookingId","bookingDate","bookingVenue"}, new String[]{communicationData.getName(),
                     communicationData.getAppointmentDTO().getBookingId(),communicationData.getAppointmentDTO().getDate(),
-                            communicationData.getAppointmentDTO().getInspectionPointCity()+communicationData.getAppointmentDTO().getInspectionPointName()});
+                            communicationData.getAppointmentDTO().getInspectionPointCity()+" "+communicationData.getAppointmentDTO().getInspectionPointName()});
                     break;
                 case EmailTemplate.USER_INTERACTIVE_TEMPLATE:
                     content = StringUtils.replaceEach(template, new String[]{"bookingId","bookingDate"}, new String[]{communicationData.getAppointmentDTO().getBookingId(),
