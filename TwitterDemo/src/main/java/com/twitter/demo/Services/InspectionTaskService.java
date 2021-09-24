@@ -1,12 +1,14 @@
 package com.twitter.demo.Services;
 
 
-import com.twitter.demo.DTO.CommunicationData;
-import com.twitter.demo.DTO.ContactDTO;
-import com.twitter.demo.DTO.InspectionDTO;
-import com.twitter.demo.DTO.InspectionResponse;
+import com.twilio.twiml.voice.Sms;
+import com.twitter.demo.Constant.EmailTemplate;
+import com.twitter.demo.DTO.*;
+import com.twitter.demo.Resources.Email.EmailImpl;
+import com.twitter.demo.Resources.Email.IEmail;
+import com.twitter.demo.sms.service.SmsSender;
+import com.twitter.demo.utils.TemplateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,30 +22,39 @@ public class InspectionTaskService {
     @Autowired
     private RestService restService;
 
+    @Autowired
+    private IEmail emailService;
+
+    @Autowired
+    private SmsSender smsSender;
+
     public void inspect() {
         List<InspectionDTO> inspectionDTOList = fetchAllInspections();
         if(!CollectionUtils.isEmpty(inspectionDTOList)){
-               String emailTemplate = getEmailContentTemplate();
+               String templateName = EmailTemplate.BOOKING_INFORMATION;
+               String emailTemplate = getEmailContentTemplate(templateName);
                List<CommunicationData> communicationDataList = new ArrayList<>();
                 for (InspectionDTO inspectionDTO : inspectionDTOList){
                     CommunicationData communicationData = new CommunicationData();
-                    communicationData.setEmailContent(emailTemplate);
+                    communicationData.setTemplateName(templateName);
+                    communicationData.setContent(emailTemplate);
+                    communicationData.setSubject(EmailTemplate.BOOKING_INFORMATION);
                     ContactDTO contactDTO = inspectionDTO.getContact();
                     if(null != contactDTO){
                         communicationData.setToEmailId(contactDTO.getEmail());
-                        communicationData.setSubject("emailTemplate se subject nikal lo");
                         communicationData.setToPhoneNumber(contactDTO.getPhone());
-                        communicationData.setEmailContent(emailTemplate);
+                        communicationData.setContent(emailTemplate);
                         communicationData.setName(contactDTO.firstname + " "+contactDTO.lastname);
                         communicationDataList.add(communicationData);
                     }
                 }
-
-                executeEmailService(communicationDataList);
-                executeWhatsappService(communicationDataList);
-                executeSMSService(communicationDataList);
+               executeEmailService(communicationDataList);
+               executeWhatsappService(communicationDataList);
+               executeSMSService(communicationDataList);
         }
     }
+
+
 
     private List<InspectionDTO> fetchAllInspections() {
         List<InspectionDTO> inspectionDTOList = null;
@@ -59,15 +70,29 @@ public class InspectionTaskService {
     }
 
     private void executeSMSService(List<CommunicationData> communicationDataList) {
+        for(CommunicationData communicationData : communicationDataList) {
+            if(communicationData.getToPhoneNumber() != null) {
+                smsSender.sendSMS(communicationData);
+            }
+        }
     }
 
     private void executeWhatsappService(List<CommunicationData> communicationDataList) {
     }
 
     private void executeEmailService(List<CommunicationData> communicationDataList) {
+        for(CommunicationData communicationData : communicationDataList) {
+            if(communicationData.getToEmailId() != null) {
+                String content = TemplateUtils.replaceContnetInTemplate(communicationData);
+                communicationData.setContent(content);
+                emailService.sendEmail(communicationData);
+            }
+        }
     }
 
-    private String getEmailContentTemplate() {
-        return null;
+    private String getEmailContentTemplate(String templateName) {
+        {
+            return TemplateUtils.getEmailTemplate(templateName);
+        }
     }
 }

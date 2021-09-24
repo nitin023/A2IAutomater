@@ -176,6 +176,15 @@
             <version>7.55.2</version>
         </dependency>
 
+
+        <!-- Jar for scheduling tasks-->
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>3.1.2</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
