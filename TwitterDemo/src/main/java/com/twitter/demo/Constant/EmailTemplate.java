@@ -1,4 +1,4 @@
-package com.twitter.demo.Resources.Email.Constant;
+package com.twitter.demo.Constant;
 
 public final class EmailTemplate
 {
