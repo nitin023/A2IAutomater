@@ -59,6 +59,9 @@ public class TemplateUtils {
                 case EmailTemplate.BOOKING_INFORMATION:
                     response = "welcome.html";
                     break;
+                case EmailTemplate.USER_INTERACTIVE_TEMPLATE:
+                    response = "UserInteractiveTemplate.html";
+                    break;
             }
         return response;
 
@@ -68,9 +71,6 @@ public class TemplateUtils {
     {
         String templateName = communicationData.getTemplateName();
         String template = communicationData.getContent();
-        Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(date);
         String content = "";
         if (templateName != null && template!=null && !templateName.isEmpty()) {
             switch (templateName) {
@@ -80,7 +80,12 @@ public class TemplateUtils {
                 case EmailTemplate.BOOKING_FILE:
                 case EmailTemplate.BOOKING_INFORMATION:
                     content = StringUtils.replaceEach(template, new String[]{"userName","bookingId","bookingDate","bookingVenue"}, new String[]{communicationData.getName(),
-                    "12345",strDate,"Sector-41,Noida"});
+                    communicationData.getAppointmentDTO().getBookingId(),communicationData.getAppointmentDTO().getDate(),
+                            communicationData.getAppointmentDTO().getInspectionPointCity()+communicationData.getAppointmentDTO().getInspectionPointName()});
+                    break;
+                case EmailTemplate.USER_INTERACTIVE_TEMPLATE:
+                    content = StringUtils.replaceEach(template, new String[]{"bookingId","bookingDate"}, new String[]{communicationData.getAppointmentDTO().getBookingId(),
+                    communicationData.getAppointmentDTO().getDate()});
                     break;
             }
         }

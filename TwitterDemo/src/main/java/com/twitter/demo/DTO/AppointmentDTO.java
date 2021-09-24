@@ -19,9 +19,9 @@ public class AppointmentDTO {
     public String inspectionPointName;
     public Object rejectionReasons;
     public String bookingSource;
-    public Date createdAt;
+    public String createdAt;
     public Object createdByUserEmail;
-    public Date updatedAt;
+    public String updatedAt;
     public Object updatedByUserEmail;
     public String placeId;
     public String status;

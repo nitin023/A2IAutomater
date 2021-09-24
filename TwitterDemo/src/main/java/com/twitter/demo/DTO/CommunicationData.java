@@ -14,5 +14,7 @@ public class CommunicationData {
     private String fromPhoneNumber;
     private String templateName;
     private String name;
+    private AppointmentDTO appointmentDTO;
+
 
 }

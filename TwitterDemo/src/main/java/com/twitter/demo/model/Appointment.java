@@ -1,10 +1,11 @@
 package com.twitter.demo.model;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Entity;
-import java.util.Date;
+import com.twitter.demo.entity.User;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.util.Date;
+@Data
 @Entity
 @Table(name = "appointment")
 public class Appointment {
@@ -34,6 +35,9 @@ public class Appointment {
     public String service;
     public String address;
     public String purchaseCoordinator;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private User userId;
 
     public String getId() {
         return id;

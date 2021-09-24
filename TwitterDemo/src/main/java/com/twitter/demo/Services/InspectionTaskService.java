@@ -8,13 +8,17 @@ import com.twitter.demo.Resources.Email.EmailImpl;
 import com.twitter.demo.Resources.Email.IEmail;
 import com.twitter.demo.sms.service.SmsSender;
 import com.twitter.demo.utils.TemplateUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,6 +32,9 @@ public class InspectionTaskService {
 
     @Autowired
     private SmsSender smsSender;
+
+    @Autowired
+    private MessageDeliveryStatusRepository messageDeliveryStatusRepository;
 
     public void inspect() {
         List<InspectionDTO> inspectionDTOList = fetchAllInspections();
@@ -46,12 +53,16 @@ public class InspectionTaskService {
                         communicationData.setToPhoneNumber(contactDTO.getPhone());
                         communicationData.setContent(emailTemplate);
                         communicationData.setName(contactDTO.firstname + " "+contactDTO.lastname);
-                        communicationDataList.add(communicationData);
                     }
+                    List<AppointmentDTO> appointmentDTOList = inspectionDTO.getAppointments();
+                    for(AppointmentDTO appointmentDTO:appointmentDTOList)
+                    {
+                            communicationData.setAppointmentDTO(appointmentDTO);
+                            String bookingDate = appointmentDTO.getCreatedAt();
+                            String appointmentDate = appointmentDTO.getDate();
+                    }
+                    communicationDataList.add(communicationData);
                 }
-               executeEmailService(communicationDataList);
-               executeWhatsappService(communicationDataList);
-               executeSMSService(communicationDataList);
         }
     }
 
@@ -70,24 +81,21 @@ public class InspectionTaskService {
         return inspectionDTOList;
     }
 
-    private void executeSMSService(List<CommunicationData> communicationDataList) {
-        for(CommunicationData communicationData : communicationDataList) {
+    private void executeSMSService(CommunicationData communicationData) {
             if(communicationData.getToPhoneNumber() != null) {
                 smsSender.sendSMS(communicationData);
-            }
+
         }
     }
 
-    private void executeWhatsappService(List<CommunicationData> communicationDataList) {
+    private void executeWhatsappService(CommunicationData communicationData) {
     }
 
-    private void executeEmailService(List<CommunicationData> communicationDataList) {
-        for(CommunicationData communicationData : communicationDataList) {
+    private void executeEmailService(CommunicationData communicationData) {
             if(communicationData.getToEmailId() != null) {
                 String content = TemplateUtils.replaceContnetInTemplate(communicationData);
                 communicationData.setContent(content);
                 emailService.sendEmail(communicationData);
-            }
         }
     }
 
@@ -95,5 +103,38 @@ public class InspectionTaskService {
         {
             return TemplateUtils.getEmailTemplate(templateName);
         }
+    }
+
+    private void processBooking(String appointmentDate,CommunicationData communicationData, String bookingDate) throws ParseException {
+        DateTime apd = new DateTime(appointmentDate);
+        DateTime booking = new DateTime(bookingDate);//new SimpleDateFormat("dd/MM/yyyy").parse(bookingDate);
+        DateTime date =  new DateTime();
+        String templateName="";
+        if(booking.equals(date)) //tday
+        {
+            templateName = EmailTemplate.BOOKING_INFORMATION;
+            communicationData.setTemplateName(templateName);
+            communicationData.setSubject(EmailTemplate.BOOKING_INFORMATION);
+            executeEmailService(communicationData);
+            executeSMSService(communicationData);
+            executeWhatsappService(communicationData);
+        }
+        if(apd.equals(date))
+        {
+            //send dday
+             templateName = EmailTemplate.USER_INTERACTIVE_TEMPLATE;
+             communicationData.setTemplateName(templateName);
+             communicationData.setSubject("Inspection Reminder");
+             executeEmailService(communicationData);
+             executeSMSService(communicationData);
+             executeWhatsappService(communicationData);
+        }
+       if(apd.minusDays(1).equals(date))
+       {
+           //d-1 day
+
+
+       }
+
     }
 }
