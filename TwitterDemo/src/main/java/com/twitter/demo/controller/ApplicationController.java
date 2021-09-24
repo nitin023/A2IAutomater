@@ -4,7 +4,6 @@ import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.BookedLeadsDto;
 import com.twitter.demo.service.serviceImpl.EmailServiceImpl;
 import com.twitter.demo.service.AppointmentService;
-import com.twitter.demo.service.IWAMessageService;
 import com.twitter.demo.service.UserActionService;
 import com.twitter.demo.model.Appointment;
 import com.twitter.demo.model.Email;
@@ -25,9 +24,6 @@ public class ApplicationController {
     UserActionService userActionService;
 
     @Autowired
-    IWAMessageService waMessageService;
-
-    @Autowired
     AppointmentService appointmentService;
 
     @ResponseBody
@@ -42,14 +38,6 @@ public class ApplicationController {
     public String sendSms(@PathVariable String toPhoneNumber) {
        // smsSender.sendSMS(toPhoneNumber);
         return "Sms sent";
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/send-wa-message")
-    public String sendMessage(@RequestBody BookedLeadsDto bookedLeadsDto) {
-        waMessageService.sendWAMessage(bookedLeadsDto);
-
-        return "message sent successfully";
     }
 
     @PostMapping("/api/v1/add/appointment")
