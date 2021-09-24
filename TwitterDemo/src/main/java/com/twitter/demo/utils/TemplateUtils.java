@@ -53,11 +53,8 @@ public class TemplateUtils {
         String response = "";
         if (template != null && !template.isEmpty())
             switch (template) {
-                case EmailTemplate.APP_VERIFY:
-                    response = "AccountVerification.html";
-                    break;
                 case EmailTemplate.BOOKING_INFORMATION:
-                    response = "welcome.html";
+                    response = "UserBookingInformationTemplate.html";
                     break;
                 case EmailTemplate.USER_INTERACTIVE_TEMPLATE:
                     response = "UserInteractiveTemplate.html";

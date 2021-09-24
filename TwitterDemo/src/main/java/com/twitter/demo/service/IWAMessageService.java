@@ -1,4 +1,4 @@
-package com.twitter.demo.Services;
+package com.twitter.demo.service;
 
 import com.twitter.demo.DTO.BookedLeadsDto;
 

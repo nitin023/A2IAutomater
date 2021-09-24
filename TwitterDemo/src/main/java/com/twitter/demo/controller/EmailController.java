@@ -1,7 +1,7 @@
 package com.twitter.demo.controller;
 
 
-import com.twitter.demo.Services.UserActionService;
+import com.twitter.demo.service.UserActionService;
 import com.twitter.demo.model.UserAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

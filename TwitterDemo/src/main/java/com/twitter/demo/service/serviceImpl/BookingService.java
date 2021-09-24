@@ -1,9 +1,10 @@
-package com.twitter.demo.Services;
+package com.twitter.demo.service.serviceImpl;
 
 
 import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.*;
-import com.twitter.demo.Resources.Email.IEmail;
+import com.twitter.demo.service.EmailService;
+import com.twitter.demo.service.RestService;
 import com.twitter.demo.sms.service.SmsService;
 import com.twitter.demo.utils.TemplateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class BookingService {
     private RestService restService;
 
     @Autowired
-    private IEmail emailService;
+    private EmailService emailService;
 
     @Autowired
     private SmsService smsService;

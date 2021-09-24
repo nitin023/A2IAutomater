@@ -1,8 +1,7 @@
-package com.twitter.demo.Services;
+package com.twitter.demo.service.serviceImpl;
 
 import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.CommunicationData;
-import com.twitter.demo.Resources.Email.EmailImpl;
 import com.twitter.demo.entity.InspectionTask;
 import com.twitter.demo.repository.InspectionTaskRepository;
 import com.twitter.demo.sms.service.SmsService;
@@ -21,7 +20,7 @@ import java.util.concurrent.Executors;
 public class InspectionTaskService {
 
     @Autowired
-    private EmailImpl emailService;
+    private EmailServiceImpl emailService;
 
     @Autowired
     private SmsService smsService;

@@ -1,7 +1,7 @@
 package com.twitter.demo.controller;
 
 
-import com.twitter.demo.Services.BookingService;
+import com.twitter.demo.service.serviceImpl.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

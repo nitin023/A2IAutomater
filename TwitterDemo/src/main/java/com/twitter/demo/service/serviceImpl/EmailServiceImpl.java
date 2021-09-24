@@ -1,4 +1,4 @@
-package com.twitter.demo.Resources.Email;
+package com.twitter.demo.service.serviceImpl;
 
 import java.util.Properties;
 
@@ -12,12 +12,12 @@ import javax.mail.internet.MimeMessage;
 
 import com.twitter.demo.Constant.ApplicationConstants;
 import com.twitter.demo.DTO.CommunicationData;
+import com.twitter.demo.service.EmailService;
 import com.twitter.demo.utils.TemplateUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailImpl implements IEmail {
+public class EmailServiceImpl implements EmailService {
 
     public void sendEmailAndCreateTask(CommunicationData communicationData) {
         if(communicationData.getToEmailId() != null) {

@@ -1,6 +1,6 @@
 package com.twitter.demo.scheduler;
 
-import com.twitter.demo.Services.BookingService;
+import com.twitter.demo.service.serviceImpl.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

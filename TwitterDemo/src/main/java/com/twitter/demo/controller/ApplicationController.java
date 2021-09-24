@@ -2,10 +2,10 @@ package com.twitter.demo.controller;
 
 import com.twitter.demo.Constant.EmailTemplate;
 import com.twitter.demo.DTO.BookedLeadsDto;
-import com.twitter.demo.Services.AppointmentService;
-import com.twitter.demo.Services.EmailService;
-import com.twitter.demo.Services.IWAMessageService;
-import com.twitter.demo.Services.UserActionService;
+import com.twitter.demo.service.serviceImpl.EmailServiceImpl;
+import com.twitter.demo.service.AppointmentService;
+import com.twitter.demo.service.IWAMessageService;
+import com.twitter.demo.service.UserActionService;
 import com.twitter.demo.model.Appointment;
 import com.twitter.demo.model.Email;
 import com.twitter.demo.sms.service.SmsService;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApplicationController {
 
     @Autowired
-    EmailService emailService;
+    EmailServiceImpl emailService;
 
     @Autowired
     SmsService smsService;

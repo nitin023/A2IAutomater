@@ -1,4 +1,4 @@
-package com.twitter.demo.Services;
+package com.twitter.demo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twitter.demo.DTO.InspectionResponse;
