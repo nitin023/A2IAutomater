@@ -1,0 +1,56 @@
+
+i
+java:S1104"NMake id a static final constant or non-public and provide accessors if needed.(Â¥Šˆøÿÿÿÿ
+j
+java:S1104"UMake bookingId a static final constant or non-public and provide accessors if needed.(•¦z
+h
+java:S1104"RMake leadId a static final constant or non-public and provide accessors if needed.(ŸŒÄ¡
+f
+java:S1104"PMake date a static final constant or non-public and provide accessors if needed.(áÊ÷
+k
+java:S1104"PMake time a static final constant or non-public and provide accessors if needed.(Ûñ¸ˆÿÿÿÿÿ
+z
+java:S1104"_Make inspectionPointCity a static final constant or non-public and provide accessors if needed.(º˜œıûÿÿÿÿ
+z
+java:S1104"_Make inspectionPointName a static final constant or non-public and provide accessors if needed.(‡ß¹ùúÿÿÿÿ
+r
+java:S1104"\Make rejectionReasons a static final constant or non-public and provide accessors if needed.(Ôš¡†
+o
+java:S1104"YMake bookingSource a static final constant or non-public and provide accessors if needed.(–¥àÙ
+k
+java:S1104"UMake createdAt a static final constant or non-public and provide accessors if needed.(û¿ñ¼
+t
+java:S1104"^Make createdByUserEmail a static final constant or non-public and provide accessors if needed.(ÙÓ¨Ô
+p
+java:S1104"UMake updatedAt a static final constant or non-public and provide accessors if needed.(ãñµçşÿÿÿÿ
+y
+java:S1104"^Make updatedByUserEmail a static final constant or non-public and provide accessors if needed.(ÊÔ³ùùÿÿÿÿ
+i
+java:S1104"SMake placeId a static final constant or non-public and provide accessors if needed.(·¾ªŸ
+h
+java:S1104"RMake status a static final constant or non-public and provide accessors if needed.(œ©²ÿ
+o
+java:S1104"TMake comments a static final constant or non-public and provide accessors if needed.(½Êì…ÿÿÿÿÿ
+y
+java:S1104"^Make cancellationReason a static final constant or non-public and provide accessors if needed.(òÎºİûÿÿÿÿ
+q
+java:S1104"VMake callStatus a static final constant or non-public and provide accessors if needed.(îÃŠ—ıÿÿÿÿ
+x
+java:S1104"]Make cancelledInStatus a static final constant or non-public and provide accessors if needed.(ÛµÁİùÿÿÿÿ
+m
+java:S1104 "WMake cancelledAt a static final constant or non-public and provide accessors if needed.(ˆ©îÑ
+l
+java:S1104!"VMake assignedTo a static final constant or non-public and provide accessors if needed.(§ˆèš
+u
+java:S1104""ZMake assignedToName a static final constant or non-public and provide accessors if needed.(»çÓ„øÿÿÿÿ
+k
+java:S1104#"PMake type a static final constant or non-public and provide accessors if needed.(ÙşÓ¼ûÿÿÿÿ
+n
+java:S1104$"SMake service a static final constant or non-public and provide accessors if needed.(Ô§Ùœÿÿÿÿÿ
+n
+java:S1104%"SMake address a static final constant or non-public and provide accessors if needed.(ÎäßÍüÿÿÿÿ
+u
+java:S1104&"_Make purchaseCoordinator a static final constant or non-public and provide accessors if needed.(Œ–§Ü
+s
+java:S1104'"XMake participants a static final constant or non-public and provide accessors if needed.(¨ äèşÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÎÂù¡ÿÿÿÿÿ

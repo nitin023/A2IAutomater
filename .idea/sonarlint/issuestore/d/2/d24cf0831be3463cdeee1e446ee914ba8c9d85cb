@@ -1,0 +1,8 @@
+
+ž
+java:S1186Q"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÿžÑ®8ˆ¡’ÄÁ/
+Y
+java:S1172Q"<Remove this unused method parameter "communicationDataList".(ÿžÑ®8¬¡’ÄÁ/
+O
+java:S1199_"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ8²¡’ÄÁ/
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÈÓîçýÿÿÿÿ8²¡’ÄÁ/
