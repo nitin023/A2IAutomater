@@ -1,0 +1,15 @@
+
+S	java:S106,"9Replace this use of System.out or System.err by a logger.(‘¤Ì˜ÿÿÿÿÿ
+
+java:S55279"wEnable server hostname verification on this SSL/TLS connection, by setting "mail.smtp.ssl.checkserveridentity" to true.(’ß‡ƒ
+P
+java:S1161B":Add the "@Override" annotation above this method signature(‡èú×
+L
+java:S1854I"6Remove this useless assignment to local variable "it".(Ÿ¤Ò
+=
+java:S1481I"'Remove this unused "it" local variable.(Ÿ¤Ò
+g
+java:S1128"JRemove this unused import 'com.twitter.demo.DTO.InspectionTaskRepository'.(êÂ¼ê8„ŞÚÅÁ/
+a
+java:S1144H"FRemove this unused private "saveEmailResponseToInspectionTask" method.(©ÑÉ±ÿÿÿÿÿ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ƒÕ³í

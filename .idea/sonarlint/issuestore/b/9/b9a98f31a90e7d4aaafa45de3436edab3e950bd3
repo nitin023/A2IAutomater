@@ -1,0 +1,7 @@
+
+i
+java:S1104
+"NMake id a static final constant or non-public and provide accessors if needed.(Â¥Šˆøÿÿÿÿ
+j
+java:S1104"UMake bookingId a static final constant or non-public and provide accessors if needed.(•¦z
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÎÂù¡ÿÿÿÿÿ

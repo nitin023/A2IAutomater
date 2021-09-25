@@ -1,0 +1,15 @@
+
+U
+java:S1118":Add a private constructor to hide the implicit public one.(±‡˜“øÿÿÿÿ
+<	java:S1317""Add a default case to this switch.(Ùåä¬ıÿÿÿÿ
+>	java:S131L""Add a default case to this switch.(ô¥˜Ó8®Š¯ÄÁ/
+m
+java:S13017"KReplace this "switch" statement by "if" statements to increase readability.(Ùåä¬ıÿÿÿÿ8±Š¯ÄÁ/
+n
+java:S2095("LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(µÎ Àúÿÿÿÿ8üŠ¯ÄÁ/
+n
+java:S2095"LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(µÎ Àúÿÿÿÿ8üŠ¯ÄÁ/
+^
+java:S2095"HUse try-with-resources or close this "FileReader" in a "finally" clause.( é¦·
+j
+java:S2095'"HUse try-with-resources or close this "FileReader" in a "finally" clause.(«œÒûşÿÿÿÿ8ûŠ¯ÄÁ/
