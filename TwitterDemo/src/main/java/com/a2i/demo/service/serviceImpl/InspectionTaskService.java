@@ -1,16 +1,18 @@
-package com.a2i.demo.service.serviceImpl;
+package com.twitter.demo.service.serviceImpl;
 
-import com.a2i.demo.entity.InspectionTask;
-import com.a2i.demo.repository.InspectionTaskRepository;
-import com.a2i.demo.Constant.EmailTemplate;
-import com.a2i.demo.DTO.CommunicationData;
-import com.a2i.demo.utils.TemplateUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.twitter.demo.Constant.EmailTemplate;
+import com.twitter.demo.DTO.AppointmentDTO;
+import com.twitter.demo.DTO.CommunicationData;
+import com.twitter.demo.entity.InspectionTask;
+import com.twitter.demo.repository.InspectionTaskRepository;
+import com.twitter.demo.utils.TemplateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,35 +29,37 @@ public class InspectionTaskService {
 
     @Autowired
     private InspectionTaskRepository inspectionTaskRepository;
-    public final static Logger logger = LogManager.getLogger(InspectionTaskService.class);
 
     public void processBooking() {
         try {
             String status = "Cancelled";
-            DateTime currentDate = new DateTime();
-            DateTime currentDatePlusOneDay = currentDate.plusDays(1);
-
-            Timestamp ts = new Timestamp(currentDate.getMillis());
-            Timestamp tsP = new Timestamp(currentDatePlusOneDay.getMillis());
-
+            SimpleDateFormat smd = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String dateStr = smd.format(date);
+            Timestamp ts = Timestamp.valueOf(dateStr+" 0:0:0.00");
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, 1);
+            Date datePlusOne = c.getTime();
+            String datePlusOneStr = smd.format(datePlusOne);
+            Timestamp tsP = Timestamp.valueOf(datePlusOneStr+" 0:0:0.00");
             List<InspectionTask> inspectionTaskList = inspectionTaskRepository.findByAppointmentDateAndStatus(status, ts, tsP);
             ExecutorService executorService = Executors.newFixedThreadPool(2);
             for (InspectionTask inspectionTask : inspectionTaskList) {
                 Date appointmentDate = inspectionTask.getAppointmentDate();
-
                 DateTime dayBeforeDate = new DateTime(appointmentDate).minusDays(1);
                 Date adpDate = new Date(dayBeforeDate.getMillis());
-
                 CommunicationData communicationData = new CommunicationData();
                 String emailContent = TemplateUtils.getEmailTemplate(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
                 updateEmailMetaData(communicationData, emailContent);
                 updateContactDetails(communicationData, inspectionTask);
+                updateAppointentDto(communicationData,inspectionTask);
+                String currDate = convertDateToString(date);
+                String bookingDate = convertDateToString(appointmentDate);
+                String previousToBookingDate = convertDateToString(adpDate);
                 executorService.submit(() -> {
-                    //adpDate.compareTo(new Date(currentDate.getMillis()))
-                    if (true || adpDate.equals(currentDate) || appointmentDate.equals(currentDate)) {
-                        //d-1 day
-                        logger.info("email and sms is send to user: "+ communicationData.getToEmailId()
-                                + " "+ communicationData.getToPhoneNumber());
+                    if (bookingDate.equals(currDate) || previousToBookingDate.equals(currDate)) {
+                        //d-1 day and d day
                         emailService.sendEmailAndCreateTask(communicationData);
                         smsService.sendSMSAndCreateTask(communicationData);
                     }
@@ -71,8 +75,21 @@ public class InspectionTaskService {
 
     }
 
+    private void updateAppointentDto(CommunicationData communicationData,InspectionTask inspectionTask) {
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setBookingId(inspectionTask.getAppointmentId());
+        appointmentDTO.setDate(inspectionTask.getAppointmentDate().toString());
+        communicationData.setAppointmentDTO(appointmentDTO);
+    }
+
+    private String convertDateToString(Date date) {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
+    }
+
     private void updateEmailMetaData(CommunicationData communicationData, String emailContent) {
-        communicationData.setTemplateName(EmailTemplate.BOOKING_INFORMATION);
+        communicationData.setTemplateName(EmailTemplate.USER_INTERACTIVE_TEMPLATE);
         communicationData.setContent(emailContent);
         communicationData.setSubject("Inspection Reminder");
     }

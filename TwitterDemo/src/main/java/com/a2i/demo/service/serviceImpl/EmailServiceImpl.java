@@ -39,8 +39,9 @@ public class EmailServiceImpl implements EmailService {
                     }
                     inspectionTask.setEmailId(communicationData.getToEmailId());
                     inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().getBookingId());
-                    Date date = new Date();
-                    Timestamp ts = new Timestamp(date.getTime());
+                    SimpleDateFormat smd = new SimpleDateFormat("yyyy-MM-dd");
+                    Date parsedDate = smd.parse(communicationData.getAppointmentDTO().getDate());
+                    Timestamp ts = new Timestamp(parsedDate.getTime());
                     inspectionTask.setAppointmentDate(ts);
                     inspectionTask.setName(communicationData.getName());
                     inspectionTask.setPhoneNumber(communicationData.getToPhoneNumber());
@@ -70,7 +71,6 @@ public class EmailServiceImpl implements EmailService {
             message.setSubject(communicationData.getSubject());
             message.setContent(emailContent, "text/html");
             Transport.send(message);
-            System.out.println("send success");
             response = true;
         } catch (MessagingException mexp) {
             mexp.printStackTrace();
@@ -90,6 +90,7 @@ public class EmailServiceImpl implements EmailService {
         return props;
     }
 
+    @Override
     public Session getSessionInfo(Properties props) {
         return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {

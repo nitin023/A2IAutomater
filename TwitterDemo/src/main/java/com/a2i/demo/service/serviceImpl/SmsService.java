@@ -1,16 +1,17 @@
-package com.a2i.demo.service.serviceImpl;
+package com.twitter.demo.service.serviceImpl;
 
-import com.a2i.demo.entity.InspectionTask;
-import com.a2i.demo.repository.InspectionTaskRepository;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
-import com.a2i.demo.DTO.CommunicationData;
-import com.a2i.demo.utils.TemplateUtils;
+import com.twitter.demo.DTO.CommunicationData;
+import com.twitter.demo.entity.InspectionTask;
+import com.twitter.demo.repository.InspectionTaskRepository;
+import com.twitter.demo.utils.TemplateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
@@ -35,8 +36,9 @@ public class SmsService {
                     }
                     inspectionTask.setEmailId(communicationData.getToEmailId());
                     inspectionTask.setAppointmentId(communicationData.getAppointmentDTO().getBookingId());
-                    Date date = new Date();
-                    Timestamp ts = new Timestamp(date.getTime());
+                    SimpleDateFormat smd = new SimpleDateFormat("yyyy-MM-dd");
+                    Date parsedDate = smd.parse(communicationData.getAppointmentDTO().getDate());
+                    Timestamp ts = new Timestamp(parsedDate.getTime());
                     inspectionTask.setAppointmentDate(ts);
                     inspectionTask.setName(communicationData.getName());
                     inspectionTask.setPhoneNumber(communicationData.getToPhoneNumber());
@@ -52,7 +54,6 @@ public class SmsService {
     }
 
     public boolean sendSMS(CommunicationData communicationData) {
-        //TODO :: Komal will update
         boolean isSMSSent = false;
         try {
             String str = TemplateUtils.readFile(communicationData.getTemplateName());
