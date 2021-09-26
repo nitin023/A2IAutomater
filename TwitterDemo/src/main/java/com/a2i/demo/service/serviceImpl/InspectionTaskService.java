@@ -1,11 +1,11 @@
-package com.twitter.demo.service.serviceImpl;
+package com.a2i.demo.service.serviceImpl;
 
-import com.twitter.demo.Constant.EmailTemplate;
-import com.twitter.demo.DTO.AppointmentDTO;
-import com.twitter.demo.DTO.CommunicationData;
-import com.twitter.demo.entity.InspectionTask;
-import com.twitter.demo.repository.InspectionTaskRepository;
-import com.twitter.demo.utils.TemplateUtils;
+import com.a2i.demo.Constant.EmailTemplate;
+import com.a2i.demo.DTO.AppointmentDTO;
+import com.a2i.demo.DTO.CommunicationData;
+import com.a2i.demo.entity.InspectionTask;
+import com.a2i.demo.repository.InspectionTaskRepository;
+import com.a2i.demo.utils.TemplateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

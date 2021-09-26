@@ -1,14 +1,13 @@
-package com.twitter.demo.service.serviceImpl;
+package com.a2i.demo.service.serviceImpl;
 
+import com.a2i.demo.DTO.CommunicationData;
+import com.a2i.demo.entity.InspectionTask;
+import com.a2i.demo.repository.InspectionTaskRepository;
+import com.a2i.demo.utils.TemplateUtils;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
-import com.twitter.demo.DTO.CommunicationData;
-import com.twitter.demo.entity.InspectionTask;
-import com.twitter.demo.repository.InspectionTaskRepository;
-import com.twitter.demo.utils.TemplateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
