@@ -1,6 +1,7 @@
 package com.a2i.demo.service.serviceImpl;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
@@ -11,6 +12,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 
 import com.a2i.demo.entity.InspectionTask;
 import com.a2i.demo.repository.InspectionTaskRepository;
@@ -98,6 +100,4 @@ public class EmailServiceImpl implements EmailService {
             }
         });
     }
-
-
 }

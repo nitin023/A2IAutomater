@@ -1,9 +1,7 @@
-package com.twitter.demo.scheduler;
+package com.a2i.demo.scheduler;
 
-import com.twitter.demo.service.serviceImpl.BookingService;
-import com.twitter.demo.service.serviceImpl.InspectionTaskService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.a2i.demo.service.serviceImpl.BookingService;
+import com.a2i.demo.service.serviceImpl.InspectionTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

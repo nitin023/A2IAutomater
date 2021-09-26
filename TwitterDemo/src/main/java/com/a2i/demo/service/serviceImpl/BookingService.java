@@ -7,7 +7,6 @@ import com.a2i.demo.DTO.CommunicationData;
 import com.a2i.demo.DTO.ContactDTO;
 import com.a2i.demo.DTO.InspectionDTO;
 import com.a2i.demo.DTO.InspectionResponse;
-import com.a2i.demo.DTO.*;
 import com.a2i.demo.enums.StateEnum;
 import com.a2i.demo.enums.StatusEnum;
 import com.a2i.demo.service.EmailService;
