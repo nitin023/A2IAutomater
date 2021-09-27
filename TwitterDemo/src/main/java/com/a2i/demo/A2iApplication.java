@@ -8,11 +8,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class TwitterApplication {
+public class A2iApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(TwitterApplication.class, args);
+        SpringApplication.run(A2iApplication.class, args);
     }
 
 
