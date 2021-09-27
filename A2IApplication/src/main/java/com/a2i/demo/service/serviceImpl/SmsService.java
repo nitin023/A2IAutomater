@@ -5,7 +5,9 @@ import com.a2i.demo.entity.InspectionTask;
 import com.a2i.demo.repository.InspectionTaskRepository;
 import com.a2i.demo.utils.TemplateUtils;
 import com.twilio.Twilio;
+import com.twilio.exception.ApiException;
 import com.twilio.rest.api.v2010.account.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class SmsService {
 
     @Autowired
@@ -48,7 +51,7 @@ public class SmsService {
 
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn("Trial version Twillio Auth warning.");
         }
     }
 
@@ -65,7 +68,7 @@ public class SmsService {
                     content).create();
             isSMSSent = true;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.warn("Trial version Twillio Auth warning.");
         }
         return isSMSSent;
 
